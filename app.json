@@ -26,6 +26,13 @@
     "plugins": [
       "expo-font",
       "expo-router"
-    ]
+    ],
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "7c35fe4f-0f51-434c-a96c-684864c9a147"
+      }
+    },
+    "owner": "satyajit104"
   }
 }

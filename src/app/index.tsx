@@ -52,7 +52,7 @@ export default function EmployeeLookupScreen() {
     }
   };
 
-  const sampleIds = ['EMP001', 'EMP002', '101', '102'];
+  const sampleIds = ['SEHWH01', 'SEHWH02', 'SEHWH03', 'SEHWH04'];
 
   return (
     <SafeAreaView className="flex-1 bg-slate-50" edges={['top']}>
@@ -98,7 +98,7 @@ export default function EmployeeLookupScreen() {
           <View className="flex-row items-center bg-slate-100 rounded-xl px-3.5 py-3 border border-slate-200 mb-3">
             <Feather name="search" size={18} color="#64748b" />
             <TextInput
-              placeholder="e.g. EMP001 or 101"
+              placeholder="e.g. SEHWH01 or SEHWH02"
               placeholderTextColor="#94a3b8"
               value={employeeId}
               onChangeText={(text) => {
