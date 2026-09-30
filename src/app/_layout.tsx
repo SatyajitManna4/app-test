@@ -34,6 +34,13 @@ export default function RootLayout() {
             headerBackTitle: 'Back',
           }}
         />
+        <Stack.Screen
+          name="contact"
+          options={{
+            title: 'Contact Us',
+            headerBackTitle: 'Back',
+          }}
+        />
       </Stack>
     </>
   );

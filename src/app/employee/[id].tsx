@@ -7,37 +7,53 @@ import {
   TouchableOpacity,
   Linking,
 } from 'react-native';
-import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
 import { Feather, Ionicons } from '@expo/vector-icons';
 import { EmployeeService } from '../../services/employeeService';
 import { EmployeeData } from '../../types/employee';
 
 export default function EmployeeDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const router = useRouter();
 
   const [employee, setEmployee] = useState<EmployeeData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (id) {
-      loadEmployee(id);
-    }
-  }, [id]);
-
-  const loadEmployee = async (empId: string) => {
+  const fetchEmployee = (empId: string) => {
     setLoading(true);
     setError(null);
-    try {
-      const data = await EmployeeService.getEmployeeById(empId);
-      setEmployee(data);
-    } catch (err: any) {
-      setError(err.message || 'Failed to load employee profile.');
-    } finally {
-      setLoading(false);
-    }
+    EmployeeService.getEmployeeById(empId)
+      .then(data => {
+        setEmployee(data);
+        setLoading(false);
+      })
+      .catch((err: any) => {
+        setError(err.message || 'Failed to l  oad employee profile.');
+        setLoading(false);
+      });
   };
+
+  useEffect(() => {
+    let isMounted = true;
+    if (id) {
+      EmployeeService.getEmployeeById(id)
+        .then(data => {
+          if (isMounted) {
+            setEmployee(data);
+            setLoading(false);
+          }
+        })
+        .catch((err: any) => {
+          if (isMounted) {
+            setError(err.message || 'Failed to load employee profile.');
+            setLoading(false);
+          }
+        });
+    }
+    return () => {
+      isMounted = false;
+    };
+  }, [id]);
 
   const getInitials = (name: string) => {
     return name
@@ -73,7 +89,7 @@ export default function EmployeeDetailScreen() {
         <Text className="text-lg font-bold text-slate-900 mb-1">Profile Not Found</Text>
         <Text className="text-xs text-slate-500 text-center mb-5">{error || 'Unknown error'}</Text>
         <TouchableOpacity
-          onPress={() => id && loadEmployee(id)}
+          onPress={() => id && fetchEmployee(id)}
           className="bg-indigo-600 px-5 py-2.5 rounded-xl flex-row items-center gap-2"
         >
           <Feather name="refresh-cw" size={14} color="#ffffff" />
